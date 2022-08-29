@@ -1,0 +1,10 @@
+﻿  Game.cpp
+C:\Users\dennlov\source\repos\Classes\Classes\Game.cpp(14,9): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\dennlov\source\repos\Classes\Classes\Game.cpp(46,16): error C2280: 'Player &Player::operator =(const Player &)': attempting to reference a deleted function
+C:\Users\dennlov\source\repos\Classes\Classes\Player.h(13): message : compiler has generated 'Player::operator =' here
+C:\Users\dennlov\source\repos\Classes\Classes\Player.h(13,1): message : 'Player &Player::operator =(const Player &)': function was implicitly deleted because 'Player' has a data member 'Player::pokemon3' of reference type
+C:\Users\dennlov\source\repos\Classes\Classes\Player.h(12): message : see declaration of 'Player::pokemon3'
+  Move.cpp
+  Player.cpp
+  Pokemon.cpp
+  Generating Code...
