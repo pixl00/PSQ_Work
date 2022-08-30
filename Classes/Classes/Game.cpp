@@ -168,7 +168,7 @@ void CheckPokemonsHealth()
 	if (Players::player1.selectedPokemon.health <= 0)
 	{
 		OutputText(Players::player1.name + "'s pokemon fainted\n");
-		//om minst en pokemon har mer än 0 hp?
+		//atleast one pokemon has more than 0 hp
 		if (Players::player1.pokemon1.health > 0 || Players::player1.pokemon2.health > 0 || Players::player1.pokemon3.health > 0)
 		{
 			Switch();
@@ -248,6 +248,7 @@ void Attack()
 #pragma region player1 attack
 	else
 	{
+		//show available moves
 		OutputText(Players::player1.selectedPokemon.move1.name + ", " + Players::player1.selectedPokemon.move2.name + "\n");
 		std::getline(std::cin, choice);
 		if (TextToLower(choice) == TextToLower(Players::player1.selectedPokemon.move1.name))
@@ -268,6 +269,7 @@ void Attack()
 			if (randNum <= Players::player1.selectedPokemon.move2.accuracy)
 			{
 				Players::player2.selectedPokemon.health -= Players::player1.selectedPokemon.move2.damage;
+				//Show how much damage was done
 				OutputText(p1Name + "'s " + p1PokeName + " did " + std::to_string(Players::player1.selectedPokemon.move2.damage) + " damage to " + p2Name + "'s " + p2PokeName + " current hp: " + std::to_string(Players::player2.selectedPokemon.health));
 
 
@@ -293,11 +295,13 @@ int Switch()
 	OutputText("Please pick a new pokemon: ");
 	if (currentRound % 2 == 0)
 	{
+		//Show what pokemons are available to switch to
 		for (int i = 0; i < p2AvailablePokemons.size(); ++i)
 		{
 			OutputText(p2AvailablePokemons[i].name);
 		}
 		std::getline(std::cin, input);
+		//Loop thru the available pokemons and find where the name is equal to the player input
 		for (int i = 0; i < p2AvailablePokemons.size(); ++i)
 		{
 			if (TextToLower(p2AvailablePokemons[i].name) == TextToLower(input))
@@ -306,6 +310,7 @@ int Switch()
 				break;
 			}
 		}
+		//Check if the chosen pokemon is alive
 		if (Players::player1.selectedPokemon.health <= 0)
 		{
 			Switch();
