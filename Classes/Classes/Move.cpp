@@ -12,7 +12,7 @@ Move Moves::empty{ Move("Empty", Type::empty, 0, 0) };
 
 Move Moves::waterGun{ Move("Water Gun", Type::water, 40, 100) };//vaporeon
 Move Moves::octazooka{ Move("Octazooka", Type::water, 65, 85) };
-Move Moves::muddyWater{ Move("Muddy Water", Type::water, 90, 85) };
+Move Moves::muddyWater{ Move("Muddy Water", Type::water, 90, 75) };
 
 Move Moves::vineWhip{ Move("Vine Whip", Type::grass, 45, 100) };
 Move Moves::razorLeaf{ Move("Razor Leaf", Type::grass, 70, 80) };//leafeon
