@@ -1,14 +1,16 @@
 #include <iostream>
 #include <Windows.h>
 #include <vector>
+#include <string>
 
 #include "Player.h"
 #include "Pokemon.h"
 #include "Move.h"
 
-int currentRound = 2;
+int currentRound = 1;
 std::vector<Pokemon> p1AvailablePokemons;
 std::vector<Pokemon> p2AvailablePokemons;
+std::vector<Pokemon> allPokemons = { Pokemons::vaporeon, Pokemons::flareon, Pokemons::leafeon };
 bool playing = true;
 
 int OutputText(std::string output, int typeSpeed = 20)
@@ -33,9 +35,9 @@ int ChoosePlayerSettings()
 {
 	std::string playerName;
 	std::string tempPokemon;
-	std::vector<Pokemon> pickablePokemons = { Pokemons::vaporeon, Pokemons::flareon, Pokemons::leafeon };
+	std::vector<Pokemon> pickablePokemons = allPokemons;
 #pragma region Player1
-	OutputText("Player1 choose your name: ", 40);
+	OutputText("Player1 choose your name: ");
 	std::getline(std::cin, playerName);
 	Players::player1.name = playerName;
 
@@ -53,8 +55,9 @@ int ChoosePlayerSettings()
 		if (TextToLower(pickablePokemons[i].name) == tempPokemon)
 		{
 			Players::player1.pokemon1 = pickablePokemons[i];
+			p1AvailablePokemons.push_back(pickablePokemons[i]);
 			pickablePokemons.erase(i + pickablePokemons.cbegin());
-			p1AvailablePokemons[0] = pickablePokemons[i];
+		
 			break;
 		}
 	}
@@ -72,8 +75,8 @@ int ChoosePlayerSettings()
 		if (TextToLower(pickablePokemons[i].name) == tempPokemon)
 		{
 			Players::player1.pokemon2 = pickablePokemons[i];
+			p1AvailablePokemons.push_back(pickablePokemons[i]);
 			pickablePokemons.erase(i + pickablePokemons.cbegin());
-			p1AvailablePokemons[1] = pickablePokemons[i];
 			break;
 		}
 	}
@@ -91,8 +94,8 @@ int ChoosePlayerSettings()
 		if (TextToLower(pickablePokemons[i].name) == tempPokemon)
 		{
 			Players::player1.pokemon3 = pickablePokemons[i];
+			p1AvailablePokemons.push_back(pickablePokemons[i]);
 			pickablePokemons.erase(i + pickablePokemons.cbegin());
-			p1AvailablePokemons[2] = pickablePokemons[i];
 			break;
 		}
 	}
@@ -117,8 +120,8 @@ int ChoosePlayerSettings()
 		if (TextToLower(pickablePokemons[i].name) == tempPokemon)
 		{
 			Players::player2.pokemon1 = pickablePokemons[i];
+			p2AvailablePokemons.push_back(pickablePokemons[i]);
 			pickablePokemons.erase(i + pickablePokemons.cbegin());
-			p2AvailablePokemons[0] = pickablePokemons[i];
 			break;
 		}
 	}
@@ -136,8 +139,8 @@ int ChoosePlayerSettings()
 		if (TextToLower(pickablePokemons[i].name) == tempPokemon)
 		{
 			Players::player2.pokemon2 = pickablePokemons[i];
+			p2AvailablePokemons.push_back(pickablePokemons[i]);
 			pickablePokemons.erase(i + pickablePokemons.cbegin());
-			p2AvailablePokemons[1] = pickablePokemons[i];
 			break;
 		}
 	}
@@ -146,7 +149,7 @@ int ChoosePlayerSettings()
 	{
 		OutputText(pickablePokemons[i].name + "\n", 20);
 	}
-	OutputText(playerName + "Choose your first Pokemon: ", 40);
+	OutputText(playerName + "Choose your third Pokemon: ", 40);
 	std::getline(std::cin, tempPokemon);
 	tempPokemon = TextToLower(tempPokemon);
 
@@ -155,12 +158,55 @@ int ChoosePlayerSettings()
 		if (TextToLower(pickablePokemons[i].name) == tempPokemon)
 		{
 			Players::player2.pokemon3 = pickablePokemons[i];
+			p2AvailablePokemons.push_back(pickablePokemons[i]);
 			pickablePokemons.erase(i + pickablePokemons.cbegin());
-			p2AvailablePokemons[2] = pickablePokemons[i];
 			break;
 		}
 	}
 #pragma endregion
+	return 0;
+}
+int SwitchPokemon()
+{
+	std::string input;
+	OutputText("Please pick a new pokemon: ");
+	if (currentRound % 2 == 0)
+	{
+		//Show what pokemons are available to switch to
+		for (int i = 0; i < p2AvailablePokemons.size(); ++i)
+		{
+			OutputText(p2AvailablePokemons[i].name + " ");
+		}
+		std::getline(std::cin, input);
+		//Loop thru the available pokemons and find where the name is equal to the player input
+		for (int i = 0; i < p2AvailablePokemons.size(); ++i)
+		{
+			if (TextToLower(p2AvailablePokemons[i].name) == TextToLower(input))
+			{
+				Players::player2.selectedPokemon = p2AvailablePokemons[i];
+				break;
+			}
+		}
+
+	}
+	else
+	{
+		for (int i = 0; i < p1AvailablePokemons.size(); ++i)
+		{
+			OutputText(p1AvailablePokemons[i].name);
+		}
+		std::getline(std::cin, input);
+		for (int i = 0; i < p1AvailablePokemons.size(); ++i)
+		{
+			if (TextToLower(p1AvailablePokemons[i].name) == TextToLower(input))
+			{
+				Players::player1.selectedPokemon = p1AvailablePokemons[i];
+				break;
+			}
+		}
+	}
+
+
 	return 0;
 }
 void CheckPokemonsHealth()
@@ -171,7 +217,7 @@ void CheckPokemonsHealth()
 		//atleast one pokemon has more than 0 hp
 		if (Players::player1.pokemon1.health > 0 || Players::player1.pokemon2.health > 0 || Players::player1.pokemon3.health > 0)
 		{
-			Switch();
+			SwitchPokemon();
 		}
 		else
 		{
@@ -185,7 +231,7 @@ void CheckPokemonsHealth()
 		//om minst en pokemon har mer än 0 hp?
 		if (Players::player2.pokemon1.health > 0 || Players::player2.pokemon2.health > 0 || Players::player2.pokemon3.health > 0)
 		{
-			Switch();
+			SwitchPokemon();
 		}
 		else
 		{
@@ -271,8 +317,6 @@ void Attack()
 				Players::player2.selectedPokemon.health -= Players::player1.selectedPokemon.move2.damage;
 				//Show how much damage was done
 				OutputText(p1Name + "'s " + p1PokeName + " did " + std::to_string(Players::player1.selectedPokemon.move2.damage) + " damage to " + p2Name + "'s " + p2PokeName + " current hp: " + std::to_string(Players::player2.selectedPokemon.health));
-
-
 			}
 			else
 			{
@@ -289,68 +333,18 @@ void Attack()
 #pragma endregion
 	CheckPokemonsHealth();
 }
-int Switch()
-{
-	std::string input;
-	OutputText("Please pick a new pokemon: ");
-	if (currentRound % 2 == 0)
-	{
-		//Show what pokemons are available to switch to
-		for (int i = 0; i < p2AvailablePokemons.size(); ++i)
-		{
-			OutputText(p2AvailablePokemons[i].name);
-		}
-		std::getline(std::cin, input);
-		//Loop thru the available pokemons and find where the name is equal to the player input
-		for (int i = 0; i < p2AvailablePokemons.size(); ++i)
-		{
-			if (TextToLower(p2AvailablePokemons[i].name) == TextToLower(input))
-			{
-				Players::player2.selectedPokemon = p2AvailablePokemons[i];
-				break;
-			}
-		}
-		//Check if the chosen pokemon is alive
-		if (Players::player1.selectedPokemon.health <= 0)
-		{
-			Switch();
-		}
-		else if (Players::player2.selectedPokemon.health <= 0)
-		{
-			Switch();
-		}
-	}
-	else
-	{
-		for (int i = 0; i < p1AvailablePokemons.size(); ++i)
-		{
-			OutputText(p1AvailablePokemons[i].name);
-		}
-		std::getline(std::cin, input);
-		for (int i = 0; i < p1AvailablePokemons.size(); ++i)
-		{
-			if (TextToLower(p1AvailablePokemons[i].name) == TextToLower(input))
-			{
-				Players::player1.selectedPokemon = p1AvailablePokemons[i];
-				break;
-			}
-		}
-	}
-	
-	
-	return 0;
-}
+
 #pragma region Input Handling
 std::string GetInput()
 {
 	std::string input;
-	if (currentRound % 2)
+	if (currentRound % 2 == 0)
 	{
-		OutputText("\n" + Players::player2.name + " choose an action: Attack, Switch Pokemon\n");
+		OutputText("\nCurrent pokemon: " + Players::player2.selectedPokemon.name + " HP: " +  std::to_string(Players::player2.selectedPokemon.health) + "\n" + Players::player2.name + " choose an action: Attack, Switch Pokemon\n", 10);
 	}
 	else
 	{
-		OutputText("\n" + Players::player1.name + " choose an action: Attack, Switch Pokemon\n");
+		OutputText("\nCurrent pokemon: " + Players::player1.selectedPokemon.name + " HP: " + std::to_string(Players::player1.selectedPokemon.health) + "\n" + Players::player1.name + " choose an action: Attack, Switch Pokemon\n", 10);
 	}
 	std::getline(std::cin, input);
 
@@ -359,9 +353,15 @@ std::string GetInput()
 int ProcessInput(std::string i)
 {
 	if (i == "attack")
+	{
 		Attack();
-	else if (i == "switch")
-		Switch();
+		currentRound++;
+	}
+	else if (i == "switch pokemon")
+	{
+		SwitchPokemon();
+		currentRound++;
+	}
 	else
 		GetInput();
 	return 0;
