@@ -46,16 +46,19 @@ private:
 unsigned int personNum = 0;
 void GenerateNewPeople(int amountPlayer)
 {
+	std::unordered_map<unsigned int, Person*> PeopleMap;
 	for (int i = 0; i < amountPlayer; ++i)
 	{
 		Person* person = new Person;
 		person->m_Name = Generator::GenerateName();
 		person->m_Age = Generator::GenerateAge();
-		//personnummer
+		person->m_PersonNumber = personNum;
+		personNum++;
 		person->m_Pet = Generator::GeneratePets();
 		person->m_HouseAddress = Generator::GenerateAddress();
 		person->m_EmailAddress = Generator::GenerateEmail();
 
+		PeopleMap.insert({person->m_PersonNumber, person});
 	}
 }
 
@@ -74,7 +77,7 @@ int main()
 
 	//Task 2
 	srand(time(nullptr));
-	std::unordered_map<int, Person> PeopleList;
 
+	GenerateNewPeople(1);
 
 }

@@ -16,8 +16,6 @@ public:
 class Person
 {
 public:
-
-
 	std::string m_Name;
 	unsigned int m_Age;
 	unsigned int m_PersonNumber;
