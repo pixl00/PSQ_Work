@@ -1,6 +1,6 @@
 #include <iostream>
 #include <Bits.h>
-#include <unordered_map>
+//#include <unordered_map>
 
 #include "Person.h"
 #include "Generator.h"
@@ -43,22 +43,22 @@ private:
 	T* test;
 };
 
-unsigned int personNum = 0;
-void GenerateNewPeople(int amountPlayer)
+unsigned int personNum = 1;
+void GenerateNewPeople(const int amountOfPlayers, People& people)
 {
-	std::unordered_map<unsigned int, Person*> PeopleMap;
-	for (int i = 0; i < amountPlayer; ++i)
+
+	for (int i = 0; i < amountOfPlayers; ++i)
 	{
 		Person* person = new Person;
 		person->m_Name = Generator::GenerateName();
 		person->m_Age = Generator::GenerateAge();
 		person->m_PersonNumber = personNum;
 		personNum++;
-		person->m_Pet = Generator::GeneratePets();
+		person->m_Pets = Generator::GeneratePets();
 		person->m_HouseAddress = Generator::GenerateAddress();
-		person->m_EmailAddress = Generator::GenerateEmail();
+		person->m_EmailAddress = Generator::GenerateEmail(person , people);
 
-		PeopleMap.insert({person->m_PersonNumber, person});
+		people.push_back(person);
 	}
 }
 
@@ -77,7 +77,15 @@ int main()
 
 	//Task 2
 	srand(time(nullptr));
+	People people;
 
-	GenerateNewPeople(1);
+	GenerateNewPeople(20000, people);;
+
+	//Byt .FindName till andra Find() funktioner
+	for (const Person* person : people.FindName("Nicklas"))
+	{
+		person->Print();
+	}
 
 }
+

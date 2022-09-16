@@ -1,7 +1,5 @@
 #include "Generator.h"
 
-
-
 std::string Generator::GenerateName()
 {
 	std::string name;
@@ -9,7 +7,7 @@ std::string Generator::GenerateName()
 	char _char = 65 + rand() % (1 + 87 - 65);
 	name += _char;
 	//generate the rest
-	const int nameLength = 2 + rand() % 10;
+	const int nameLength = 2 + rand() % 8;
 	for (int i = 0; i < nameLength; ++i)
 	{
 		_char = 97 + rand() % (119 - 97 + 1);
@@ -18,14 +16,16 @@ std::string Generator::GenerateName()
 	
 	return name;
 }
+
 unsigned int Generator::GenerateAge()
 {
 	unsigned int age = 18 + rand() % (100 - 18);
 	return age;
 }
-std::vector<Pet> Generator::GeneratePets()
+
+std::vector<Pet*> Generator::GeneratePets()
 {
-	std::vector<Pet> pets;
+	std::vector<Pet*> pets;
 
 	const int petAmount = rand() % 4;
 	for (int i = 0; i < petAmount; ++i)
@@ -43,15 +43,26 @@ std::vector<Pet> Generator::GeneratePets()
 		}
 		pet->m_Name = GenerateName();
 		pet->m_Age = rand() % 15;
-		pets.push_back(*pet);
+		pets.push_back(pet);
 	}
 	return pets;
 }
+
 std::string Generator::GenerateAddress()
 {
-	
+	std::string address = GenerateName();
+	address += " st";
+	return address;
+
 }
-std::string Generator::GenerateEmail()
+
+std::string Generator::GenerateEmail(const Person* person, const People& people)
 {
+	std::string email = person->m_Name + "@gmail.com";
+	const int emailCount = people.NameCount(person->m_Name);
+
+	if ( emailCount > 0)
+		email = person->m_Name + std::to_string(emailCount) + "@gmail.com";
 	
+	return email;
 }
